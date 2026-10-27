@@ -1,0 +1,40 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    image: devops-backend:2.0
+    container_name: backend
+    volumes:
+      - ./backend/data.txt:/app/data.txt
+    networks:
+      - devops-net
+    restart: always
+
+  proxy:
+    image: nginx:alpine
+    container_name: proxy
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - devops-net
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+    image: devops-frontend:2.0
+    container_name: frontend
+    networks:
+      - devops-net
+    depends_on:
+      - backend
+    restart: always
+
+networks:
+  devops-net:
+    driver: bridge
