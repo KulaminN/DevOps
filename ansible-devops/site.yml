@@ -1,0 +1,6 @@
+---
+- name: 3 Лабараторная
+  hosts: webservers
+  become: yes
+  roles:
+    - mainRole
