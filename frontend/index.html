@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Frontend v2.0</title>
+</head>
+<body>
+<h1>Frontend v2.0</h1>
+
+<h3>Отправка</h3>
+<input id="text" placeholder="Введите текст">
+<button onclick="send()">Отправить</button>
+
+<h3>Просмотр</h3>
+<button onclick="load()">Загрузить данные</button>
+<br>
+<textarea id="out" rows="10" cols="50" readonly></textarea>
+<p id="msg"></p>
+
+<script>
+    async function send() {
+        const text = document.getElementById("text").value;
+        const r = await fetch("/api/submit", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({text: text})
+        });
+        const data = await r.json();
+        document.getElementById("msg").innerText = data.message;
+    }
+
+    async function load() {
+        const r = await fetch("/api/read");
+        const data = await r.json();
+        document.getElementById("out").value = data.content;
+    }
+</script>
+</body>
+</html>
